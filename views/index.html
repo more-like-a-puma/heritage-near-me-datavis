@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heritage Visualiser</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/style.css" media="screen" title="no title">
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.16.4/lodash.min.js"></script>
+</head>
+<body>
+
+  <h1>Heritage Near Me</h1>
+  <h2>Data Visualisation</h2>
+  <input id="searchterm" type="text"/> <button id="search">search</button>
+  <div id="results"></div>
+  <div class="infoOutput">
+
+  </div>
+  <div class="displayMap">
+
+  </div>
+
+  <script type="text/javascript">
+    // Search bar functionality
+    $("#search").click( function(e) {
+      var q = $("#searchterm").val();
+      $.getJSON("/completedata.json",
+        {
+          srsearch: q,
+          action: "query",
+          list: "search",
+          format: "json"
+        },
+        function(data) {
+          $("#results").empty();
+          $("#results").append("Results for <b>" + q + "</b>");
+          $.each( data, function( key, val ) {
+          //   var itemID = val.ItemID;
+          //   var itemName = val.ItemName;
+          //   var lga = val.LGA;
+          //   var itemType = val.ItemType;
+          //   var itemCategory = val.ItemCategory;
+          //   var itemGroup = val.ItemGroup;
+          //   items.push( "<li id='" + key + "'>" + itemName + "<br>" + itemID + "<br>" + itemType + "<br>" + itemCategory + "<br>" + itemGroup + "<br>" + lga + "</li>" + "<br>" );
+          });
+        });
+      });
+
+    // First draft of the way I want the search results to display
+    $.getJSON( "/completedata.json", function( data ) {
+      var items = [];
+      $.each( data, function( key, val ) {
+        var itemID = val.ItemID;
+        var itemName = val.ItemName;
+        var lga = val.LGA;
+        var itemType = val.ItemType;
+        var itemCategory = val.ItemCategory;
+        var itemGroup = val.ItemGroup;
+        items.push( "<li id='" + key + "'>" + itemName + "<br>" + itemID + "<br>" + itemType + "<br>" + itemCategory + "<br>" + itemGroup + "<br>" + lga + "</li>" + "<br>" );
+      });
+      $( "<ul/>", {
+        "class": "displayList",
+        html: items.join( "" )
+      }).appendTo( ".infoOutput" );
+    });
+
+  </script>
+</body>
+</html>
